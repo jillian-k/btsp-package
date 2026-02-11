@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Communication_Optional_Attended__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Number of optional communication touchpoints attended. Counts touchpoints where Count as Dosage = true, Avenue = Phone/Text/Email/Other, Core = false, and Status = Completed.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Total optional communication touchpoints (phone, text, email, other) this participant attended.</inlineHelpText>
+    <label>Communication Optional Attended</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>
