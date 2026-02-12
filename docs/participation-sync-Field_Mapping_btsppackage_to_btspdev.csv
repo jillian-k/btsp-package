@@ -11,12 +11,12 @@ Core Programming Days Offered,btsp1__Core_Programming_Days_Offered__c,Core_Progr
 Core Programming Days Attended,btsp1__Core_Programming_Days_Attended__c,Core_Programming_Days_Attended__c,Core_Programming_Days_Attended__c,Number(18 0),Created new in btspdev
 Non-Core Programming Days Offered,btsp1__Non_Core_Programming_Days_Offered__c,Non_Core_Programming_Days_Offered__c,Non_Core_Programming_Days_Offered__c,Number(18 0),Created new in btspdev
 Non-Core Programming Days Attended,btsp1__Non_Core_Programming_Days_Attended__c,Non_Core_Programming_Days_Attended__c,Non_Core_Programming_Days_Attended__c,Number(18 0),Created new in btspdev
-Participation ID from National,btsp1__Participation_ID_from_National__c,N/A,N/A,Text(18),Only on btsppackage - holds National Participation record ID for writeback
+Participation ID from National,btsp1__Participation_ID_from_National__c,N/A,N/A,Text(18),btsppackage only - holds National Participation record ID for writeback
 Participation ID,N/A,Participation_ID__c,N/A,Text(18),PE only - target Participation record ID populated on subsequent syncs
-Source Contact ID,N/A,Source_Contact_ID__c,N/A,Text(18),PE only - affiliate Contact ID for Integration Key lookup
-Source Org ID,N/A,Source_Org_ID__c,N/A,Text(18),PE only - affiliate Org ID for Integration Key lookup
-Term,N/A,Term__c,N/A,Text(80),PE only - free-text term from affiliate validated by sync handler
-BTSP Participation ID,N/A,BTSP_Participation_ID__c,N/A,Text(18),PE only - source record ID for writeback
+Source Contact ID,N/A,Source_Contact_ID__c,Source_Contact_ID__c,Text(18),PE field written to Participation for traceability and writeback
+Source Org ID,N/A,Source_Org_ID__c,Source_Org_ID__c,Text(18),PE field written to Participation for traceability and writeback
+Term (raw text),N/A,Term__c,BTSP_Provided_Term__c,Text(80),PE Term__c stores raw affiliate term text; written to BTSP_Provided_Term__c on Participation
+BTSP Participation ID,N/A,BTSP_Participation_ID__c,BTSP_Participation_ID__c,Text(18),PE field written to Participation for traceability and writeback
 Invalid Reason,N/A,N/A,Invalid_Reason__c,Text(255),Participation only - describes why term validation failed
-Writeback Status,N/A,N/A,Writeback_Status__c,Picklist,Participation only - tracks sync status (Not Synced / Pending Writeback / Complete / Error / Mismatched Term)
-BTSP Provided Term,N/A,N/A,BTSP_Provided_Term__c,Text(80),Participation only - raw term text from affiliate as submitted
+Writeback Status,N/A,N/A,Writeback_Status__c,Picklist,Participation only - Not Synced / Pending Writeback / Complete / Error / Mismatched Term
+BTSP Provided Term,N/A,N/A,BTSP_Provided_Term__c,Text(80),Participation only - raw term text from affiliate (populated from PE Term__c)

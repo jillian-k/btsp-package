@@ -73,6 +73,9 @@ Key fields: `Source_Contact_ID__c`, `Source_Org_ID__c`, `Term__c`, `BTSP_Partici
 
 | Change | Object | Detail |
 |---|---|---|
+| New field `Source_Contact_ID__c` | `Participation__c` | Text(18), affiliate Contact ID for traceability and writeback |
+| New field `Source_Org_ID__c` | `Participation__c` | Text(18), affiliate Org ID for traceability and writeback |
+| New field `BTSP_Participation_ID__c` | `Participation__c` | Text(18), source record ID for Make writeback |
 | New field `Invalid_Reason__c` | `Participation__c` | Text(255), describes why term validation failed |
 | New field `Writeback_Status__c` | `Participation__c` | Picklist (Not Synced, Pending Writeback, Complete, Error, Mismatched Term) |
 | New field `BTSP_Provided_Term__c` | `Participation__c` | Text(80), stores raw term text from affiliate |
@@ -115,6 +118,9 @@ Test scenarios include: valid School Year, valid Summer, invalid term (Manual Re
 | Field(s) | Targets |
 |---|---|
 | 12 rollup fields on `Participation__c` | BTSP Participation perm set + System Administrator |
+| `Source_Contact_ID__c` on `Participation__c` | BTSP Participation perm set + System Administrator |
+| `Source_Org_ID__c` on `Participation__c` | BTSP Participation perm set + System Administrator |
+| `BTSP_Participation_ID__c` on `Participation__c` | BTSP Participation perm set + System Administrator |
 | `Invalid_Reason__c` on `Participation__c` | BTSP Participation perm set + System Administrator |
 | `Writeback_Status__c` on `Participation__c` | BTSP Participation perm set + System Administrator |
 | `BTSP_Provided_Term__c` on `Participation__c` | BTSP Participation perm set + System Administrator |
@@ -151,7 +157,7 @@ btsppackage/
 │   └── objects/
 │       ├── BTSP_Participation__c/fields/          # 13 fields (btsppackage)
 │       ├── Affiliate_Participation_Sync__e/fields/ # 17 fields (platform event)
-│       └── Participation__c/fields/               # Invalid_Reason__c
+│       └── Participation__c/fields/               # Source IDs, Invalid_Reason, Writeback_Status, BTSP_Provided_Term
 ├── manifest/package.xml
 └── sfdx-project.json
 ```

@@ -227,6 +227,11 @@ public with sharing class ParticipationSyncHandler {
             // Store the raw term text from the affiliate for reference
             p.BTSP_Provided_Term__c = ctx.evt.Term__c;
 
+            // Store source IDs for traceability and writeback
+            p.Source_Contact_ID__c = ctx.evt.Source_Contact_ID__c;
+            p.Source_Org_ID__c = ctx.evt.Source_Org_ID__c;
+            p.BTSP_Participation_ID__c = ctx.evt.BTSP_Participation_ID__c;
+
             toUpsert.add(p);
         }
 

@@ -35,6 +35,7 @@ private class ParticipationSyncHandlerTest {
         List<Participation__c> parts = [
             SELECT Participant__c, Affiliate_Site__c, Type__c, Invalid_Reason__c,
                    Writeback_Status__c, BTSP_Provided_Term__c,
+                   Source_Contact_ID__c, Source_Org_ID__c, BTSP_Participation_ID__c,
                    X1_1_Core_Offered__c, X1_1_Core_Attended__c,
                    Core_Programming_Days_Offered__c, Core_Programming_Days_Attended__c
             FROM Participation__c
@@ -48,6 +49,9 @@ private class ParticipationSyncHandlerTest {
         System.assertEquals(null, p.Invalid_Reason__c, 'No invalid reason for valid term');
         System.assertEquals('Pending Writeback', p.Writeback_Status__c, 'Valid term should be Pending Writeback');
         System.assertEquals('2024/2025 SY', p.BTSP_Provided_Term__c, 'Should store raw term text');
+        System.assertEquals(SOURCE_CONTACT_ID, p.Source_Contact_ID__c, 'Should store source contact ID');
+        System.assertEquals(SOURCE_ORG_ID, p.Source_Org_ID__c, 'Should store source org ID');
+        System.assertEquals(BTSP_PARTICIPATION_ID, p.BTSP_Participation_ID__c, 'Should store BTSP participation ID');
         System.assertEquals(10, p.X1_1_Core_Offered__c, 'Rollup value should match');
         System.assertEquals(8, p.X1_1_Core_Attended__c, 'Rollup value should match');
         System.assertEquals(20, p.Core_Programming_Days_Offered__c, 'Rollup value should match');
@@ -115,9 +119,10 @@ private class ParticipationSyncHandlerTest {
         System.assertEquals('Manual Review', terms[0].Term__c);
         System.assertEquals('0000', terms[0].Year__c);
 
-        // Verify Participation has invalid reason and mismatched term status
+        // Verify Participation has invalid reason, mismatched term status, and source IDs
         List<Participation__c> parts = [
-            SELECT Invalid_Reason__c, Writeback_Status__c, BTSP_Provided_Term__c
+            SELECT Invalid_Reason__c, Writeback_Status__c, BTSP_Provided_Term__c,
+                   Source_Contact_ID__c, Source_Org_ID__c, BTSP_Participation_ID__c
             FROM Participation__c
             WHERE Participant__c = :con.Id
         ];
@@ -128,6 +133,12 @@ private class ParticipationSyncHandlerTest {
             'Invalid term should have Mismatched Term status');
         System.assertEquals('2020-2021 SY', parts[0].BTSP_Provided_Term__c,
             'Should store the raw term text from affiliate');
+        System.assertEquals(SOURCE_CONTACT_ID, parts[0].Source_Contact_ID__c,
+            'Should store source contact ID even on invalid term');
+        System.assertEquals(SOURCE_ORG_ID, parts[0].Source_Org_ID__c,
+            'Should store source org ID even on invalid term');
+        System.assertEquals(BTSP_PARTICIPATION_ID, parts[0].BTSP_Participation_ID__c,
+            'Should store BTSP participation ID even on invalid term');
     }
 
     /**

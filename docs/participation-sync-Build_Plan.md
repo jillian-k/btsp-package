@@ -150,9 +150,14 @@ Receives participation rollup data from BTSP affiliate orgs via an external Make
 
 ### Participation__c Schema Updates
 
-- **Invalid_Reason__c**: Text(255). Populated when a participation is parented to the Manual Review holding term. Describes why the affiliate term failed validation so users can resolve and re-parent.
-- **Writeback_Status__c**: Picklist (Not Synced, Pending Writeback, Complete, Error, Mismatched Term). Tracks sync status between National and affiliate. The Make integration looks for "Pending Writeback" to sync back. Set to "Mismatched Term" for invalid terms — users must re-parent and set to "Pending Writeback" manually.
-- **BTSP_Provided_Term__c**: Text(80). Stores the raw term text from the affiliate exactly as submitted, so users can see the original input even after normalization or Manual Review.
+| API Name | Label | Type | Purpose |
+|---|---|---|---|
+| `Source_Contact_ID__c` | Source Contact ID | Text(18) | Affiliate Contact ID — stored for traceability and writeback |
+| `Source_Org_ID__c` | Source Org ID | Text(18) | Affiliate Org ID — stored for traceability and writeback |
+| `BTSP_Participation_ID__c` | BTSP Participation ID | Text(18) | Source record ID from affiliate — required for Make writeback |
+| `Invalid_Reason__c` | Invalid Reason | Text(255) | Describes why term validation failed so users can resolve and re-parent |
+| `Writeback_Status__c` | Writeback Status | Picklist | Tracks sync status: Not Synced, Pending Writeback, Complete, Error, Mismatched Term |
+| `BTSP_Provided_Term__c` | BTSP Provided Term | Text(80) | Raw term text from affiliate exactly as submitted (from PE Term__c) |
 
 ### Architecture
 
@@ -203,7 +208,7 @@ Invalid terms get descriptive reasons:
 2. **Query Integration Keys** — `RecordType = Affiliate_Org`, `Type__c = BTSP`, `Writeback_Status__c = Complete`, matched by `Source_Contact_ID__c` + `Source_Org_ID__c`, most recent by `LastModifiedDate`
 3. **Get Affiliate Account** from `Integration_Key__c.Contact__r.AccountId`
 4. **Find/Create Affiliate Terms** — query by Account + normalized Term. Create new with Manual Review holding pattern for invalid terms
-5. **Upsert Participation records** — match by `Participant__c` + `Affiliate_Term__c`. Set 12 rollup values, `Affiliate_Site__c`, `Type__c = Student`, `Invalid_Reason__c` for invalid terms, `Writeback_Status__c` (Pending Writeback or Mismatched Term), and `BTSP_Provided_Term__c` (raw term text)
+5. **Upsert Participation records** — match by `Participant__c` + `Affiliate_Term__c`. Set 12 rollup values, `Affiliate_Site__c`, `Type__c = Student`, `Source_Contact_ID__c`, `Source_Org_ID__c`, `BTSP_Participation_ID__c`, `Invalid_Reason__c` for invalid terms, `Writeback_Status__c` (Pending Writeback or Mismatched Term), and `BTSP_Provided_Term__c` (raw term text)
 6. **Skip events** where no Integration Key found (logged via `System.debug`)
 
 #### TestDataFactory.cls
@@ -229,6 +234,9 @@ When a term fails validation:
 ### FLS
 
 FLS granted on `Participation__c` to BTSP Participation permission set and System Administrator profile:
+- `Source_Contact_ID__c`
+- `Source_Org_ID__c`
+- `BTSP_Participation_ID__c`
 - `Invalid_Reason__c`
 - `Writeback_Status__c`
 - `BTSP_Provided_Term__c`
