@@ -120,15 +120,14 @@ Reorganized existing **"Program Participation"** section with two-column Offered
 
 Receives participation rollup data from BTSP affiliate orgs via an external Make integration.
 
-#### Platform Event Fields (17 total)
+#### Platform Event Fields (16 total)
 
 | API Name | Label | Type | Required | Purpose |
 |---|---|---|---|---|
 | `Source_Contact_ID__c` | Source Contact ID | Text(18) | Yes | Affiliate Contact ID for Integration Key lookup |
 | `Source_Org_ID__c` | Source Org ID | Text(18) | Yes | Affiliate Org ID for Integration Key lookup |
 | `Term__c` | Term | Text(80) | Yes | Term text from affiliate, validated by sync handler |
-| `BTSP_Participation_ID__c` | BTSP Participation ID | Text(18) | Yes | Source record ID for writeback |
-| `Participation_ID__c` | Participation ID | Text(18) | Yes | Target Participation record ID (populated on subsequent syncs) |
+| `Participation_ID__c` | Participation ID | Text(18) | Yes | Source BTSP Participation record ID from affiliate, written to `BTSP_Participation_ID__c` on Participation |
 | `X1_1_Core_Offered__c` | 1:1 Core Offered | Number(18,0) | No | Rollup value |
 | `X1_1_Core_Attended__c` | 1:1 Core Attended | Number(18,0) | No | Rollup value |
 | `X1_1_Optional_Offered__c` | 1:1 Optional Offered | Number(18,0) | No | Rollup value |
@@ -208,7 +207,7 @@ Invalid terms get descriptive reasons:
 2. **Query Integration Keys** — `RecordType = Affiliate_Org`, `Type__c = BTSP`, `Writeback_Status__c = Complete`, matched by `Source_Contact_ID__c` + `Source_Org_ID__c`, most recent by `LastModifiedDate`
 3. **Get Affiliate Account** from `Integration_Key__c.Contact__r.AccountId`
 4. **Find/Create Affiliate Terms** — query by Account + normalized Term. Create new with Manual Review holding pattern for invalid terms
-5. **Upsert Participation records** — match by `Participant__c` + `Affiliate_Term__c`. Set 12 rollup values, `Affiliate_Site__c`, `Type__c = Student`, `Source_Contact_ID__c`, `Source_Org_ID__c`, `BTSP_Participation_ID__c`, `Invalid_Reason__c` for invalid terms, `Writeback_Status__c` (Pending Writeback or Mismatched Term), and `BTSP_Provided_Term__c` (raw term text)
+5. **Upsert Participation records** — match by `Participant__c` + `Affiliate_Term__c`. Set 12 rollup values, `Affiliate_Site__c`, `Type__c = Student`, `Source_Contact_ID__c`, `Source_Org_ID__c`, `BTSP_Participation_ID__c` (from PE `Participation_ID__c`), `Invalid_Reason__c` for invalid terms, `Writeback_Status__c` (Pending Writeback or Mismatched Term), and `BTSP_Provided_Term__c` (from PE `Term__c`)
 6. **Skip events** where no Integration Key found (logged via `System.debug`)
 
 #### TestDataFactory.cls

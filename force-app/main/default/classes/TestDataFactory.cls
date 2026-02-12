@@ -118,20 +118,20 @@ public class TestDataFactory {
      * @param sourceContactId Source Contact ID
      * @param sourceOrgId Source Org ID
      * @param term Term text
-     * @param btspParticipationId Source BTSP Participation ID
+     * @param participationId Source BTSP Participation ID from affiliate
      * @return Affiliate_Participation_Sync__e (not published)
      */
     public static Affiliate_Participation_Sync__e buildSyncEvent(
         String sourceContactId,
         String sourceOrgId,
         String term,
-        String btspParticipationId
+        String participationId
     ) {
         return new Affiliate_Participation_Sync__e(
             Source_Contact_ID__c = sourceContactId,
             Source_Org_ID__c = sourceOrgId,
             Term__c = term,
-            BTSP_Participation_ID__c = btspParticipationId,
+            Participation_ID__c = participationId,
             X1_1_Core_Offered__c = 10,
             X1_1_Core_Attended__c = 8,
             X1_1_Optional_Offered__c = 5,

@@ -56,10 +56,10 @@ All 12 rollup fields provide core vs. optional breakdowns for:
 | Item | Count |
 |---|---|
 | Rollup fields (Number 18,0) | 12 |
-| Matching/key fields (Text) | 5 |
-| Total PE fields | 17 |
+| Matching/key fields (Text) | 4 |
+| Total PE fields | 16 |
 
-Key fields: `Source_Contact_ID__c`, `Source_Org_ID__c`, `Term__c`, `BTSP_Participation_ID__c`, `Participation_ID__c`
+Key fields: `Source_Contact_ID__c`, `Source_Org_ID__c`, `Term__c`, `Participation_ID__c`
 
 ### 4. btspdev — Affiliate Term Schema Updates
 

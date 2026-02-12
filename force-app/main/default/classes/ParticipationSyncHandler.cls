@@ -230,7 +230,7 @@ public with sharing class ParticipationSyncHandler {
             // Store source IDs for traceability and writeback
             p.Source_Contact_ID__c = ctx.evt.Source_Contact_ID__c;
             p.Source_Org_ID__c = ctx.evt.Source_Org_ID__c;
-            p.BTSP_Participation_ID__c = ctx.evt.BTSP_Participation_ID__c;
+            p.BTSP_Participation_ID__c = ctx.evt.Participation_ID__c;
 
             toUpsert.add(p);
         }
