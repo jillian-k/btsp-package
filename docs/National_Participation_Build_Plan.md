@@ -182,6 +182,39 @@ Fields to grant FLS for:
 
 ---
 
+## Platform Event: Affiliate Participation Sync
+
+### Overview
+
+A platform event `Affiliate_Participation_Sync__e` was created in btspdev to receive participation rollup data synced from BTSP affiliate packaging orgs via an external integration. Each event carries the rollup field values and a Participation ID to identify the target `Participation__c` record.
+
+- **Label:** Affiliate Participation Sync
+- **API Name:** `Affiliate_Participation_Sync__e`
+- **Event Type:** Standard Volume
+- **Publish Behavior:** Publish After Commit
+
+### Platform Event Fields (13 fields)
+
+| API Name | Label | Type | Required | Description |
+|---|---|---|---|---|
+| `Participation_ID__c` | Participation ID | Text(18) | Yes | Salesforce Record ID of the target Participation__c record |
+| `X1_1_Core_Offered__c` | 1:1 Core Offered | Number(18,0) | No | Core 1:1 touchpoints offered, synced from affiliate |
+| `X1_1_Core_Attended__c` | 1:1 Core Attended | Number(18,0) | No | Core 1:1 touchpoints attended, synced from affiliate |
+| `X1_1_Optional_Offered__c` | 1:1 Optional Offered | Number(18,0) | No | Optional 1:1 touchpoints offered, synced from affiliate |
+| `X1_1_Optional_Attended__c` | 1:1 Optional Attended | Number(18,0) | No | Optional 1:1 touchpoints attended, synced from affiliate |
+| `Communication_Core_Offered__c` | Communication Core Offered | Number(18,0) | No | Core communication touchpoints offered, synced from affiliate |
+| `Communication_Core_Attended__c` | Communication Core Attended | Number(18,0) | No | Core communication touchpoints attended, synced from affiliate |
+| `Communication_Optional_Offered__c` | Communication Optional Offered | Number(18,0) | No | Optional communication touchpoints offered, synced from affiliate |
+| `Communication_Optional_Attended__c` | Communication Optional Attended | Number(18,0) | No | Optional communication touchpoints attended, synced from affiliate |
+| `Core_Programming_Days_Offered__c` | Core Programming Days Offered | Number(18,0) | No | Core programming days offered, synced from affiliate |
+| `Core_Programming_Days_Attended__c` | Core Programming Days Attended | Number(18,0) | No | Core programming days attended, synced from affiliate |
+| `Non_Core_Programming_Days_Offered__c` | Non-Core Programming Days Offered | Number(18,0) | No | Non-core programming days offered, synced from affiliate |
+| `Non_Core_Programming_Days_Attended__c` | Non-Core Programming Days Attended | Number(18,0) | No | Non-core programming days attended, synced from affiliate |
+
+The 12 rollup fields mirror the fields on `Participation__c` by API name and type. The `Participation_ID__c` field is required and used by the subscriber (trigger or flow) to look up the target record.
+
+---
+
 ## Notes
 
 - **btspdev only.** No changes to btspprod.
@@ -189,6 +222,7 @@ Fields to grant FLS for:
 - **`Core_Attended__c` / `Core_Offered__c` do not exist in btspdev.** They only exist in btspprod. The core programming days fields are created new in btspdev.
 - **Field behavior on layout:** All fields use Edit behavior for flexibility during testing. Consider changing to Readonly once automation is in place.
 - **Old field names in descriptions.** Each renamed field's description notes what the field was previously named, for audit trail.
+- **Platform event subscriber not yet built.** The `Affiliate_Participation_Sync__e` event is ready to receive data, but no trigger or flow has been created yet to process events and update `Participation__c` records.
 
 ---
 
@@ -201,3 +235,5 @@ Fields to grant FLS for:
 | Reorganize layout | 1 | `Participation Layout` in btspdev |
 | Create permission set | 1 | "BTSP Participation" in btspdev |
 | Grant FLS | 12 fields | Sys Admin profile + BTSP Participation perm set |
+| Create platform event | 1 | `Affiliate_Participation_Sync__e` in btspdev |
+| Create platform event fields | 13 | 12 rollup Number fields + 1 Participation ID Text field |

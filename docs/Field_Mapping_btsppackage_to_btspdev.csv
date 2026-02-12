@@ -1,0 +1,14 @@
+Field Label,btsppackage Object,btsppackage API Name,btspdev Object,btspdev API Name,Type,Action in btspdev,Notes
+1:1 Core Offered,BTSP_Participation__c,btsp1__X1_1_Core_Offered__c,Participation__c,X1_1_Core_Offered__c,Number(18 0),Renamed,"Previously X1_1_Offered__c (1:1 Offered)"
+1:1 Core Attended,BTSP_Participation__c,btsp1__X1_1_Core_Attended__c,Participation__c,X1_1_Core_Attended__c,Number(18 0),Renamed,"Previously X1_1_Attended__c (1:1 Attended)"
+1:1 Optional Offered,BTSP_Participation__c,btsp1__X1_1_Optional_Offered__c,Participation__c,X1_1_Optional_Offered__c,Number(18 0),Created new,
+1:1 Optional Attended,BTSP_Participation__c,btsp1__X1_1_Optional_Attended__c,Participation__c,X1_1_Optional_Attended__c,Number(18 0),Created new,
+Communication Core Offered,BTSP_Participation__c,btsp1__Communication_Core_Offered__c,Participation__c,Communication_Core_Offered__c,Number(18 0),Renamed,"Previously Communication_Offered__c (Communication Offered)"
+Communication Core Attended,BTSP_Participation__c,btsp1__Communication_Core_Attended__c,Participation__c,Communication_Core_Attended__c,Number(18 0),Renamed,"Previously Communication_Attended__c (Communication Attended)"
+Communication Optional Offered,BTSP_Participation__c,btsp1__Communication_Optional_Offered__c,Participation__c,Communication_Optional_Offered__c,Number(18 0),Created new,
+Communication Optional Attended,BTSP_Participation__c,btsp1__Communication_Optional_Attended__c,Participation__c,Communication_Optional_Attended__c,Number(18 0),Created new,
+Core Programming Days Offered,BTSP_Participation__c,btsp1__Core_Programming_Days_Offered__c,Participation__c,Core_Programming_Days_Offered__c,Number(18 0),Created new,
+Core Programming Days Attended,BTSP_Participation__c,btsp1__Core_Programming_Days_Attended__c,Participation__c,Core_Programming_Days_Attended__c,Number(18 0),Created new,
+Non-Core Programming Days Offered,BTSP_Participation__c,btsp1__Non_Core_Programming_Days_Offered__c,Participation__c,Non_Core_Programming_Days_Offered__c,Number(18 0),Created new,
+Non-Core Programming Days Attended,BTSP_Participation__c,btsp1__Non_Core_Programming_Days_Attended__c,Participation__c,Non_Core_Programming_Days_Attended__c,Number(18 0),Created new,
+Participation ID from National,BTSP_Participation__c,btsp1__Participation_ID_from_National__c,N/A,N/A,Text(18),Not created in btspdev,Only needed on the package side for sync writeback

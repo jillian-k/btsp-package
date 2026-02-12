@@ -114,10 +114,40 @@ These fields were already on `Participation__c` and remain unchanged:
 
 ---
 
+## Platform Event: Affiliate Participation Sync
+
+A platform event `Affiliate_Participation_Sync__e` was created to receive participation rollup data synced from BTSP affiliate packaging orgs via an external integration.
+
+- **API Name:** `Affiliate_Participation_Sync__e`
+- **Event Type:** Standard Volume
+- **Publish Behavior:** Publish After Commit
+
+### Platform Event Fields
+
+| API Name | Label | Type | Required |
+|---|---|---|---|
+| `Participation_ID__c` | Participation ID | Text(18) | Yes |
+| `X1_1_Core_Offered__c` | 1:1 Core Offered | Number(18,0) | No |
+| `X1_1_Core_Attended__c` | 1:1 Core Attended | Number(18,0) | No |
+| `X1_1_Optional_Offered__c` | 1:1 Optional Offered | Number(18,0) | No |
+| `X1_1_Optional_Attended__c` | 1:1 Optional Attended | Number(18,0) | No |
+| `Communication_Core_Offered__c` | Communication Core Offered | Number(18,0) | No |
+| `Communication_Core_Attended__c` | Communication Core Attended | Number(18,0) | No |
+| `Communication_Optional_Offered__c` | Communication Optional Offered | Number(18,0) | No |
+| `Communication_Optional_Attended__c` | Communication Optional Attended | Number(18,0) | No |
+| `Core_Programming_Days_Offered__c` | Core Programming Days Offered | Number(18,0) | No |
+| `Core_Programming_Days_Attended__c` | Core Programming Days Attended | Number(18,0) | No |
+| `Non_Core_Programming_Days_Offered__c` | Non-Core Programming Days Offered | Number(18,0) | No |
+| `Non_Core_Programming_Days_Attended__c` | Non-Core Programming Days Attended | Number(18,0) | No |
+
+The 12 rollup fields mirror the `Participation__c` fields by API name and type. `Participation_ID__c` is the required key field used to identify which Participation record to update. No subscriber (trigger or flow) has been built yet to process these events.
+
+---
+
 ## Notes
 
 - **btspdev only.** No changes were made to btspprod.
-- **No Apex code or automation.** These fields will be populated by future automation. Currently they are empty.
+- **No Apex code or automation.** These fields will be populated by future automation. Currently they are empty. The platform event is ready to receive data but has no subscriber yet.
 - **Field behavior on layout:** All fields use `Edit` behavior for flexibility during testing. Consider tightening to `Readonly` once automation is in place and validated.
 - **Old field names in descriptions.** Each renamed field's description notes what it was previously named, for audit purposes.
 - **`Core_Attended__c` / `Core_Offered__c` do not exist in btspdev.** They only exist in btspprod. The core programming days fields were created new in btspdev rather than renamed.
