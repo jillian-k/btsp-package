@@ -128,4 +128,4 @@ These fields were already on `Participation__c` and remain unchanged:
 
 - [BTSP Participation Build Plan (btsppackage)](BTSP_Participation_Build_Plan.md) — Field specs for the packaging org.
 - [National Participation Build Plan (btspdev)](National_Participation_Build_Plan.md) — Detailed build plan for the btspdev implementation.
-- [btsppackage README](../README.md) — Overview of all work done in the packaging org.
+- [btsppackage README](BTSP_Participation_README.md) — Overview of all work done in the packaging org.
