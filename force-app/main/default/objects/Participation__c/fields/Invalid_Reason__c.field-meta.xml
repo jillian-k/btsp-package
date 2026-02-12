@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Invalid_Reason__c</fullName>
+    <description>Describes why the term value from the affiliate could not be validated. Populated when the Participation is parented to the Manual Review holding term. Users should review this reason, correct the term, and re-parent to the correct Affiliate Term.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Reason the affiliate term failed validation (e.g., uses hyphen instead of slash, missing term type). Fix the term and re-parent this record to the correct Affiliate Term.</inlineHelpText>
+    <label>Invalid Reason</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
