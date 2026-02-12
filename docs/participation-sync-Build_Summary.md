@@ -127,9 +127,9 @@ Test scenarios include: valid School Year, valid Summer, invalid term (Manual Re
 ```
 btsppackage/
 ├── docs/
-│   ├── Build_Plan.md                    # Consolidated build plan (this project)
-│   ├── Build_Summary.md                 # This file
-│   ├── Field_Mapping_btsppackage_to_btspdev.csv
+│   ├── participation-sync-Build_Plan.md                    # Consolidated build plan (this project)
+│   ├── participation-sync-Build_Summary.md                 # This file
+│   ├── participation-sync-Field_Mapping_btsppackage_to_btspdev.csv
 │   └── agentrules.md
 ├── force-app/main/default/
 │   ├── classes/
@@ -154,5 +154,5 @@ btsppackage/
 
 ## Related
 
-- [Build Plan](Build_Plan.md) — Detailed field specs, architecture, and implementation details.
-- [Field Mapping CSV](Field_Mapping_btsppackage_to_btspdev.csv) — Excel-friendly field mapping across all three objects.
+- [Build Plan](participation-sync-Build_Plan.md) — Detailed field specs, architecture, and implementation details.
+- [Field Mapping CSV](participation-sync-Field_Mapping_btsppackage_to_btspdev.csv) — Excel-friendly field mapping across all three objects.
