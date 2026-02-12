@@ -1,22 +1,21 @@
-Field Label,btsppackage API Name,Platform Event API Name,btspdev Participation API Name,Type,Notes
-1:1 Core Offered,btsp1__X1_1_Core_Offered__c,X1_1_Core_Offered__c,X1_1_Core_Offered__c,Number(18 0),Renamed from X1_1_Offered__c in btspdev
-1:1 Core Attended,btsp1__X1_1_Core_Attended__c,X1_1_Core_Attended__c,X1_1_Core_Attended__c,Number(18 0),Renamed from X1_1_Attended__c in btspdev
-1:1 Optional Offered,btsp1__X1_1_Optional_Offered__c,X1_1_Optional_Offered__c,X1_1_Optional_Offered__c,Number(18 0),Created new in btspdev
-1:1 Optional Attended,btsp1__X1_1_Optional_Attended__c,X1_1_Optional_Attended__c,X1_1_Optional_Attended__c,Number(18 0),Created new in btspdev
-Communication Core Offered,btsp1__Communication_Core_Offered__c,Communication_Core_Offered__c,Communication_Core_Offered__c,Number(18 0),Renamed from Communication_Offered__c in btspdev
-Communication Core Attended,btsp1__Communication_Core_Attended__c,Communication_Core_Attended__c,Communication_Core_Attended__c,Number(18 0),Renamed from Communication_Attended__c in btspdev
-Communication Optional Offered,btsp1__Communication_Optional_Offered__c,Communication_Optional_Offered__c,Communication_Optional_Offered__c,Number(18 0),Created new in btspdev
-Communication Optional Attended,btsp1__Communication_Optional_Attended__c,Communication_Optional_Attended__c,Communication_Optional_Attended__c,Number(18 0),Created new in btspdev
-Core Programming Days Offered,btsp1__Core_Programming_Days_Offered__c,Core_Programming_Days_Offered__c,Core_Programming_Days_Offered__c,Number(18 0),Created new in btspdev
-Core Programming Days Attended,btsp1__Core_Programming_Days_Attended__c,Core_Programming_Days_Attended__c,Core_Programming_Days_Attended__c,Number(18 0),Created new in btspdev
-Non-Core Programming Days Offered,btsp1__Non_Core_Programming_Days_Offered__c,Non_Core_Programming_Days_Offered__c,Non_Core_Programming_Days_Offered__c,Number(18 0),Created new in btspdev
-Non-Core Programming Days Attended,btsp1__Non_Core_Programming_Days_Attended__c,Non_Core_Programming_Days_Attended__c,Non_Core_Programming_Days_Attended__c,Number(18 0),Created new in btspdev
-Participation ID from National,btsp1__Participation_ID_from_National__c,N/A,N/A,Text(18),btsppackage only - holds National Participation record ID for writeback
-Participation ID,N/A,Participation_ID__c,N/A,Text(18),PE only - target Participation record ID populated on subsequent syncs
-Source Contact ID,N/A,Source_Contact_ID__c,Source_Contact_ID__c,Text(18),PE field written to Participation for traceability and writeback
-Source Org ID,N/A,Source_Org_ID__c,Source_Org_ID__c,Text(18),PE field written to Participation for traceability and writeback
-Term (raw text),N/A,Term__c,BTSP_Provided_Term__c,Text(80),PE Term__c stores raw affiliate term text; written to BTSP_Provided_Term__c on Participation
-BTSP Participation ID,N/A,BTSP_Participation_ID__c,BTSP_Participation_ID__c,Text(18),PE field written to Participation for traceability and writeback
-Invalid Reason,N/A,N/A,Invalid_Reason__c,Text(255),Participation only - describes why term validation failed
-Writeback Status,N/A,N/A,Writeback_Status__c,Picklist,Participation only - Not Synced / Pending Writeback / Complete / Error / Mismatched Term
-BTSP Provided Term,N/A,N/A,BTSP_Provided_Term__c,Text(80),Participation only - raw term text from affiliate (populated from PE Term__c)
+btsppackage API Name,Platform Event API Name,btspdev Participation API Name
+btsp1__X1_1_Core_Offered__c,X1_1_Core_Offered__c,X1_1_Core_Offered__c
+btsp1__X1_1_Core_Attended__c,X1_1_Core_Attended__c,X1_1_Core_Attended__c
+btsp1__X1_1_Optional_Offered__c,X1_1_Optional_Offered__c,X1_1_Optional_Offered__c
+btsp1__X1_1_Optional_Attended__c,X1_1_Optional_Attended__c,X1_1_Optional_Attended__c
+btsp1__Communication_Core_Offered__c,Communication_Core_Offered__c,Communication_Core_Offered__c
+btsp1__Communication_Core_Attended__c,Communication_Core_Attended__c,Communication_Core_Attended__c
+btsp1__Communication_Optional_Offered__c,Communication_Optional_Offered__c,Communication_Optional_Offered__c
+btsp1__Communication_Optional_Attended__c,Communication_Optional_Attended__c,Communication_Optional_Attended__c
+btsp1__Core_Programming_Days_Offered__c,Core_Programming_Days_Offered__c,Core_Programming_Days_Offered__c
+btsp1__Core_Programming_Days_Attended__c,Core_Programming_Days_Attended__c,Core_Programming_Days_Attended__c
+btsp1__Non_Core_Programming_Days_Offered__c,Non_Core_Programming_Days_Offered__c,Non_Core_Programming_Days_Offered__c
+btsp1__Non_Core_Programming_Days_Attended__c,Non_Core_Programming_Days_Attended__c,Non_Core_Programming_Days_Attended__c
+btsp1__Participation_ID_from_National__c,N/A,N/A
+N/A,Participation_ID__c,N/A
+N/A,Source_Contact_ID__c,Source_Contact_ID__c
+N/A,Source_Org_ID__c,Source_Org_ID__c
+btsp1__Term__c,Term__c,BTSP_Provided_Term__c
+N/A,BTSP_Participation_ID__c,BTSP_Participation_ID__c
+N/A,N/A,Invalid_Reason__c
+N/A,N/A,Writeback_Status__c
