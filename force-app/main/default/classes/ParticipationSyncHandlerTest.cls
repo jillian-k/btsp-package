@@ -34,6 +34,7 @@ private class ParticipationSyncHandlerTest {
 
         List<Participation__c> parts = [
             SELECT Participant__c, Affiliate_Site__c, Type__c, Invalid_Reason__c,
+                   Writeback_Status__c, BTSP_Provided_Term__c,
                    X1_1_Core_Offered__c, X1_1_Core_Attended__c,
                    Core_Programming_Days_Offered__c, Core_Programming_Days_Attended__c
             FROM Participation__c
@@ -45,6 +46,8 @@ private class ParticipationSyncHandlerTest {
         System.assertEquals(acct.Id, p.Affiliate_Site__c, 'Affiliate Site should match Account');
         System.assertEquals('Student', p.Type__c, 'Type should be Student');
         System.assertEquals(null, p.Invalid_Reason__c, 'No invalid reason for valid term');
+        System.assertEquals('Pending Writeback', p.Writeback_Status__c, 'Valid term should be Pending Writeback');
+        System.assertEquals('2024/2025 SY', p.BTSP_Provided_Term__c, 'Should store raw term text');
         System.assertEquals(10, p.X1_1_Core_Offered__c, 'Rollup value should match');
         System.assertEquals(8, p.X1_1_Core_Attended__c, 'Rollup value should match');
         System.assertEquals(20, p.Core_Programming_Days_Offered__c, 'Rollup value should match');
@@ -73,11 +76,14 @@ private class ParticipationSyncHandlerTest {
         Test.stopTest();
 
         List<Participation__c> parts = [
-            SELECT Participant__c, Type__c FROM Participation__c
+            SELECT Participant__c, Type__c, Writeback_Status__c, BTSP_Provided_Term__c
+            FROM Participation__c
             WHERE Participant__c = :con.Id
         ];
         System.assertEquals(1, parts.size(), 'Should create one Participation');
         System.assertEquals('Student', parts[0].Type__c);
+        System.assertEquals('Pending Writeback', parts[0].Writeback_Status__c, 'Valid term should be Pending Writeback');
+        System.assertEquals('2024 Summer', parts[0].BTSP_Provided_Term__c, 'Should store raw term text');
     }
 
     /**
@@ -109,14 +115,19 @@ private class ParticipationSyncHandlerTest {
         System.assertEquals('Manual Review', terms[0].Term__c);
         System.assertEquals('0000', terms[0].Year__c);
 
-        // Verify Participation has invalid reason
+        // Verify Participation has invalid reason and mismatched term status
         List<Participation__c> parts = [
-            SELECT Invalid_Reason__c FROM Participation__c
+            SELECT Invalid_Reason__c, Writeback_Status__c, BTSP_Provided_Term__c
+            FROM Participation__c
             WHERE Participant__c = :con.Id
         ];
         System.assertEquals(1, parts.size(), 'Should create Participation');
         System.assertEquals('Uses hyphen instead of slash', parts[0].Invalid_Reason__c,
             'Invalid reason should describe the issue');
+        System.assertEquals('Mismatched Term', parts[0].Writeback_Status__c,
+            'Invalid term should have Mismatched Term status');
+        System.assertEquals('2020-2021 SY', parts[0].BTSP_Provided_Term__c,
+            'Should store the raw term text from affiliate');
     }
 
     /**
@@ -148,11 +159,16 @@ private class ParticipationSyncHandlerTest {
         Test.stopTest();
 
         List<Participation__c> parts = [
-            SELECT X1_1_Core_Offered__c FROM Participation__c
+            SELECT X1_1_Core_Offered__c, Writeback_Status__c, BTSP_Provided_Term__c
+            FROM Participation__c
             WHERE Participant__c = :con.Id
         ];
         System.assertEquals(1, parts.size(), 'Should NOT create a duplicate');
         System.assertEquals(10, parts[0].X1_1_Core_Offered__c, 'Should update to new value');
+        System.assertEquals('Pending Writeback', parts[0].Writeback_Status__c,
+            'Updated record should be Pending Writeback');
+        System.assertEquals('2024/2025 SY', parts[0].BTSP_Provided_Term__c,
+            'Should store raw term text');
     }
 
     /**

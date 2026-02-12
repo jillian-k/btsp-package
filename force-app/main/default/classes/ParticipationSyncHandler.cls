@@ -221,6 +221,12 @@ public with sharing class ParticipationSyncHandler {
             // Set Invalid Reason (only for Manual Review terms)
             p.Invalid_Reason__c = ctx.termResult.invalidReason;
 
+            // Set writeback status based on term validity
+            p.Writeback_Status__c = ctx.termResult.isValid ? 'Pending Writeback' : 'Mismatched Term';
+
+            // Store the raw term text from the affiliate for reference
+            p.BTSP_Provided_Term__c = ctx.evt.Term__c;
+
             toUpsert.add(p);
         }
 

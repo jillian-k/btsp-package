@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BTSP_Provided_Term__c</fullName>
+    <description>The raw term text received from the affiliate org exactly as submitted. Stored for reference so users can see the original input, especially when the term failed validation and the record is parented to a Manual Review holding term.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Original term text from the affiliate org. If this differs from the Affiliate Term, the term may have been normalized or flagged for review.</inlineHelpText>
+    <label>BTSP Provided Term</label>
+    <length>80</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

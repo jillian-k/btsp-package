@@ -18,3 +18,5 @@ Source Org ID,N/A,Source_Org_ID__c,N/A,Text(18),PE only - affiliate Org ID for I
 Term,N/A,Term__c,N/A,Text(80),PE only - free-text term from affiliate validated by sync handler
 BTSP Participation ID,N/A,BTSP_Participation_ID__c,N/A,Text(18),PE only - source record ID for writeback
 Invalid Reason,N/A,N/A,Invalid_Reason__c,Text(255),Participation only - describes why term validation failed
+Writeback Status,N/A,N/A,Writeback_Status__c,Picklist,Participation only - tracks sync status (Not Synced / Pending Writeback / Complete / Error / Mismatched Term)
+BTSP Provided Term,N/A,N/A,BTSP_Provided_Term__c,Text(80),Participation only - raw term text from affiliate as submitted

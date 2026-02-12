@@ -74,13 +74,15 @@ Key fields: `Source_Contact_ID__c`, `Source_Org_ID__c`, `Term__c`, `BTSP_Partici
 | Change | Object | Detail |
 |---|---|---|
 | New field `Invalid_Reason__c` | `Participation__c` | Text(255), describes why term validation failed |
+| New field `Writeback_Status__c` | `Participation__c` | Picklist (Not Synced, Pending Writeback, Complete, Error, Mismatched Term) |
+| New field `BTSP_Provided_Term__c` | `Participation__c` | Text(80), stores raw term text from affiliate |
 
 ### 6. btspdev — Apex & Flow
 
 | Component | Type | Purpose |
 |---|---|---|
 | `TermValidator` | Apex Class | Validates/normalizes affiliate term text |
-| `ParticipationSyncHandler` | Apex Class (@InvocableMethod) | Processes PE events, upserts Participation records |
+| `ParticipationSyncHandler` | Apex Class (@InvocableMethod) | Processes PE events, upserts Participation records with status tracking |
 | `TestDataFactory` | Apex Test Utility | Shared test data factory |
 | `TermValidatorTest` | Apex Test Class | 13 tests, 98% coverage |
 | `ParticipationSyncHandlerTest` | Apex Test Class | 8 tests, 97% coverage |
@@ -90,8 +92,10 @@ Key fields: `Source_Contact_ID__c`, `Source_Org_ID__c`, `Term__c`, `BTSP_Partici
 
 When an affiliate's term text fails validation:
 1. Participation is parented to a "Manual Review" `Affiliate_Term__c` (Term Type = Manual Review, Year = 0000)
-2. `Invalid_Reason__c` on the `Participation__c` describes the validation failure
-3. Users review, fix the term, and re-parent to the correct Affiliate Term
+2. `Writeback_Status__c` is set to "Mismatched Term"
+3. `Invalid_Reason__c` on the `Participation__c` describes the validation failure
+4. `BTSP_Provided_Term__c` stores the exact text the affiliate sent
+5. Users review, fix the term, re-parent to the correct Affiliate Term, and set `Writeback_Status__c` to "Pending Writeback" so Make can complete the sync
 
 ---
 
@@ -112,6 +116,8 @@ Test scenarios include: valid School Year, valid Summer, invalid term (Manual Re
 |---|---|
 | 12 rollup fields on `Participation__c` | BTSP Participation perm set + System Administrator |
 | `Invalid_Reason__c` on `Participation__c` | BTSP Participation perm set + System Administrator |
+| `Writeback_Status__c` on `Participation__c` | BTSP Participation perm set + System Administrator |
+| `BTSP_Provided_Term__c` on `Participation__c` | BTSP Participation perm set + System Administrator |
 | PE fields on `Affiliate_Participation_Sync__e` | Accessible by default (no FLS needed) |
 
 ---

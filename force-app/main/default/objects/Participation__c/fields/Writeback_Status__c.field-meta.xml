@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Writeback_Status__c</fullName>
+    <description>Tracks the sync status between National and the affiliate org. Set by the sync handler and updated by the Make integration.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Tracks sync status. The Make integration looks for Pending Writeback to sync data back to the affiliate. When a record has Mismatched Term, re-parent it to the correct Affiliate Term and set this field to Pending Writeback so Make can complete the sync.</inlineHelpText>
+    <label>Writeback Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Not Synced</fullName>
+                <default>false</default>
+                <label>Not Synced</label>
+            </value>
+            <value>
+                <fullName>Pending Writeback</fullName>
+                <default>false</default>
+                <label>Pending Writeback</label>
+            </value>
+            <value>
+                <fullName>Complete</fullName>
+                <default>false</default>
+                <label>Complete</label>
+            </value>
+            <value>
+                <fullName>Error</fullName>
+                <default>false</default>
+                <label>Error</label>
+            </value>
+            <value>
+                <fullName>Mismatched Term</fullName>
+                <default>false</default>
+                <label>Mismatched Term</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
