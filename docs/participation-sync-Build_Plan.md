@@ -12,9 +12,9 @@
 
 ### Overview
 
-Create 13 new fields on `btsp1__BTSP_Participation__c` for participation rollup tracking (core/optional breakdowns for 1:1 touchpoints, communication touchpoints, and programming days) plus a Participation ID from National field used for sync writeback. Add a new "Participation Rollups" layout section.
+Create 12 new fields on `btsp1__BTSP_Participation__c` for participation rollup tracking (core/optional breakdowns for 1:1 touchpoints, communication touchpoints, and programming days). Add a new "Participation Rollups" layout section.
 
-### New Fields (13 total)
+### New Fields (12 total)
 
 #### 1:1 Touchpoint Fields (4)
 
@@ -43,19 +43,10 @@ Create 13 new fields on `btsp1__BTSP_Participation__c` for participation rollup 
 | `Non_Core_Programming_Days_Offered__c` | Non-Core Programming Days Offered | Number(18,0) |
 | `Non_Core_Programming_Days_Attended__c` | Non-Core Programming Days Attended | Number(18,0) |
 
-#### Participation ID from National (1)
-
-| API Name | Label | Type |
-|---|---|---|
-| `Participation_ID_from_National__c` | Participation ID from National | Text(18) |
-
-Used for writeback operations during participation sync.
-
 ### Layout Changes
 
 **Layout:** `BTSP Participation Layout`
 
-- `Participation_ID_from_National__c` added to the **Information** section.
 - New **"Participation Rollups"** section with two-column Offered/Attended layout.
 
 ### Notes
@@ -264,7 +255,6 @@ Platform event fields are accessible by default (no FLS required).
 |---|---|---|
 | Object | `btsp1__BTSP_Participation__c` | `Participation__c` |
 | Namespace | `btsp1` (managed package) | None (unmanaged) |
-| Participation ID from National | Yes | No — not needed |
 | Layout section | "Participation Rollups" (new) | "Program Participation" (reorganized) |
 | Platform Event | N/A | `Affiliate_Participation_Sync__e` |
 | Apex/Flow | N/A | TermValidator, ParticipationSyncHandler, PE-Triggered Flow |

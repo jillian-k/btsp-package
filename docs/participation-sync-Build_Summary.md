@@ -29,7 +29,6 @@ BTSP_Participation__c           Publishes PE          Affiliate_Participation_Sy
 | Item | Count |
 |---|---|
 | New rollup fields (Number 18,0) | 12 |
-| Participation ID from National (Text 18) | 1 |
 | Layout section ("Participation Rollups") | 1 |
 
 All 12 rollup fields provide core vs. optional breakdowns for:
@@ -155,8 +154,8 @@ btsppackage/
 │   ├── layouts/
 │   │   └── BTSP_Participation__c-BTSP Participation Layout.layout-meta.xml
 │   └── objects/
-│       ├── BTSP_Participation__c/fields/          # 13 fields (btsppackage)
-│       ├── Affiliate_Participation_Sync__e/fields/ # 17 fields (platform event)
+│       ├── BTSP_Participation__c/fields/          # 12 fields (btsppackage)
+│       ├── Affiliate_Participation_Sync__e/fields/ # 16 fields (platform event)
 │       └── Participation__c/fields/               # Source IDs, Invalid_Reason, Writeback_Status, BTSP_Provided_Term
 ├── manifest/package.xml
 └── sfdx-project.json
