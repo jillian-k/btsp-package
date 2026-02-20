@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Last_Participation_Sync__c</fullName>
+    <description>Date of the most recent participation sync from the BTSP Affiliate Org. Populated by the Make integration after a successful sync.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The date this record was last synced with the BTSP Affiliate Org.</inlineHelpText>
+    <label>Last Participation Sync</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

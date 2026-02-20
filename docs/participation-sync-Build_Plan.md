@@ -12,9 +12,15 @@
 
 ### Overview
 
-Create 12 new fields on `btsp1__BTSP_Participation__c` for participation rollup tracking (core/optional breakdowns for 1:1 touchpoints, communication touchpoints, and programming days). Add a new "Participation Rollups" layout section.
+Create 12 new rollup fields and 1 date field on `btsp1__BTSP_Participation__c` for participation rollup tracking (core/optional breakdowns for 1:1 touchpoints, communication touchpoints, and programming days) and sync timestamps. Add a new "Participation Rollups" layout section.
 
-### New Fields (12 total)
+### New Fields (13 total)
+
+#### Sync Tracking (1)
+
+| API Name | Label | Type |
+|---|---|---|
+| `Last_Participation_Sync__c` | Last Participation Sync | Date |
 
 #### 1:1 Touchpoint Fields (4)
 
@@ -53,6 +59,7 @@ Create 12 new fields on `btsp1__BTSP_Participation__c` for participation rollup 
 
 - All fields use `Edit` behavior on layout. Consider `Readonly` once automation is validated.
 - Source files omit namespace prefix — Salesforce applies `btsp1__` automatically upon deploy.
+- `Last_Participation_Sync__c` is placed in the Information section of the layout for visibility.
 
 ---
 
@@ -63,7 +70,7 @@ Create 12 new fields on `btsp1__BTSP_Participation__c` for participation rollup 
 
 ### Overview
 
-Align the `Participation__c` object in btspdev with the `BTSP_Participation__c` fields in the btsp1 managed package. 4 field renames + 8 new fields + layout reorganization + permission set + FLS.
+Align the `Participation__c` object in btspdev with the `BTSP_Participation__c` fields in the btsp1 managed package. 4 field renames + 8 new rollup fields + 1 date field + layout reorganization + permission set + FLS.
 
 ### Existing Fields Renamed (4)
 
@@ -76,10 +83,11 @@ Align the `Participation__c` object in btspdev with the `BTSP_Participation__c` 
 
 All four were already `Number(18,0)` and contained no data.
 
-### New Fields (8)
+### New Fields (9)
 
 | API Name | Label | Type |
 |---|---|---|
+| `Last_Participation_Sync__c` | Last Participation Sync | Date |
 | `X1_1_Optional_Offered__c` | 1:1 Optional Offered | Number(18,0) |
 | `X1_1_Optional_Attended__c` | 1:1 Optional Attended | Number(18,0) |
 | `Communication_Optional_Offered__c` | Communication Optional Offered | Number(18,0) |
@@ -93,12 +101,12 @@ All four were already `Number(18,0)` and contained no data.
 
 **Layout:** `Participation Layout`
 
-Reorganized existing **"Program Participation"** section with two-column Offered/Attended layout. Existing general fields (`Programming_Days_Required__c`, `Programming_Days_Attended__c`, `Core_Attendance__c`) remain in the section.
+Reorganized existing **"Program Participation"** section with two-column Offered/Attended layout. Existing general fields (`Programming_Days_Required__c`, `Programming_Days_Attended__c`, `Core_Attendance__c`) remain in the section. `Last_Participation_Sync__c` placed in the Information section.
 
 ### Permission Set & FLS
 
 - Created **"BTSP Participation"** permission set (API: `BTSP_Participation`).
-- Granted Read/Edit FLS on all 12 rollup fields to BTSP Participation perm set and System Administrator profile.
+- Granted Read/Edit FLS on all 12 rollup fields and `Last_Participation_Sync__c` to BTSP Participation perm set and System Administrator profile.
 
 ---
 
@@ -142,6 +150,7 @@ Receives participation rollup data from BTSP affiliate orgs via an external Make
 
 | API Name | Label | Type | Purpose |
 |---|---|---|---|
+| `Last_Participation_Sync__c` | Last Participation Sync | Date | Date of most recent sync from the BTSP Affiliate Org |
 | `Source_Contact_ID__c` | Source Contact ID | Text(18) | Affiliate Contact ID — stored for traceability and writeback |
 | `Source_Org_ID__c` | Source Org ID | Text(18) | Affiliate Org ID — stored for traceability and writeback |
 | `BTSP_Participation_ID__c` | BTSP Participation ID | Text(18) | Source record ID from affiliate — required for Make writeback |
@@ -224,6 +233,7 @@ When a term fails validation:
 ### FLS
 
 FLS granted on `Participation__c` to BTSP Participation permission set and System Administrator profile:
+- `Last_Participation_Sync__c`
 - `Source_Contact_ID__c`
 - `Source_Org_ID__c`
 - `BTSP_Participation_ID__c`
