@@ -30,11 +30,14 @@ BTSP_Participation__c           Publishes PE          Affiliate_Participation_Sy
 |---|---|
 | New rollup fields (Number 18,0) | 12 |
 | Layout section ("Participation Rollups") | 1 |
+| FLS grants (12 fields × 2 targets) | 24 |
 
 All 12 rollup fields provide core vs. optional breakdowns for:
 - 1:1 touchpoints (offered/attended)
 - Communication touchpoints (offered/attended)
 - Programming days (offered/attended)
+
+FLS granted to BTSP Participation permission set and System Administrator profile for all 12 rollup fields.
 
 ### 2. btspdev — National Participation Fields
 
@@ -90,14 +93,52 @@ Key fields: `Source_Contact_ID__c`, `Source_Org_ID__c`, `Term__c`, `Participatio
 | `ParticipationSyncHandlerTest` | Apex Test Class | 8 tests, 97% coverage |
 | `Affiliate_Participation_Sync_Handler` | PE-Triggered Flow | Subscribes to PE, calls handler |
 
-### Manual Review Holding Pattern
+### Affiliate Term Creation
 
-When an affiliate's term text fails validation:
-1. Participation is parented to a "Manual Review" `Affiliate_Term__c` (Term Type = Manual Review, Year = 0000)
+The handler **does not** create regular Affiliate Terms (School Year or Summer). These must be user-created in btspdev before syncing participation data.
+
+The handler **only** auto-creates the "Manual Review" holding term if one doesn't exist for the Account. There is one Manual Review term per Account, used for all error scenarios.
+
+| Term Type | Created By | Count Per Account |
+|-----------|------------|-------------------|
+| School Year (e.g., 2024/2025 SY) | User | Many (one per year) |
+| Summer (e.g., 2024 Summer) | User | Many (one per year) |
+| Manual Review | Handler (auto) | One (holding record) |
+
+### Mismatched Term Handling
+
+When a term fails validation **OR** no matching Affiliate Term exists:
+
+1. The Participation is parented to a "Manual Review" `Affiliate_Term__c` (Term Type = Manual Review, Year = 0000)
 2. `Writeback_Status__c` is set to "Mismatched Term"
-3. `Invalid_Reason__c` on the `Participation__c` describes the validation failure
+3. `Invalid_Reason__c` describes what was wrong:
+   - For invalid term format: e.g., "Uses hyphen instead of slash", "Empty string"
+   - For valid format but missing Affiliate Term: "No matching Affiliate Term found for: 2024/2025 SY"
 4. `BTSP_Provided_Term__c` stores the exact text the affiliate sent
-5. Users review, fix the term, re-parent to the correct Affiliate Term, and set `Writeback_Status__c` to "Pending Writeback" so Make can complete the sync
+
+**To resolve:** Re-parent the Participation to the correct Affiliate Term and set `Writeback_Status__c` to "Pending Writeback" so Make can complete the sync.
+
+### Scenario Matrix
+
+| # | Scenario | Integration Key | Term Format | Affiliate Term Exists? | Outcome | Writeback Status | Invalid Reason |
+|---|----------|-----------------|-------------|------------------------|---------|------------------|----------------|
+| 1 | Happy path - School Year | ✅ Found | ✅ Valid (`2024/2025 SY`) | ✅ Yes | Participation created/updated | Pending Writeback | (null) |
+| 2 | Happy path - Summer | ✅ Found | ✅ Valid (`2024 Summer`) | ✅ Yes | Participation created/updated | Pending Writeback | (null) |
+| 3 | Happy path - Spaces normalized | ✅ Found | ✅ Valid (`2024 / 2025 SY`) | ✅ Yes (as `2024/2025 SY`) | Participation created/updated | Pending Writeback | (null) |
+| 4 | Missing Affiliate Term | ✅ Found | ✅ Valid (`2024/2025 SY`) | ❌ No | Participation → Manual Review | Mismatched Term | "No matching Affiliate Term found for: 2024/2025 SY" |
+| 5 | Invalid - Hyphen | ✅ Found | ❌ Invalid (`2020-2021 SY`) | N/A | Participation → Manual Review | Mismatched Term | "Uses hyphen instead of slash" |
+| 6 | Invalid - Space after slash only | ✅ Found | ❌ Invalid (`2020/ 2021 SY`) | N/A | Participation → Manual Review | Mismatched Term | "Space only after slash" |
+| 7 | Invalid - Space before slash only | ✅ Found | ❌ Invalid (`2020 /2021 SY`) | N/A | Participation → Manual Review | Mismatched Term | "Space only before slash" |
+| 8 | Invalid - Year only | ✅ Found | ❌ Invalid (`2020`) | N/A | Participation → Manual Review | Mismatched Term | "Missing term type" |
+| 9 | Invalid - Wrong order | ✅ Found | ❌ Invalid (`Summer 2020`) | N/A | Participation → Manual Review | Mismatched Term | "Year not at start" |
+| 10 | Invalid - Wordy format | ✅ Found | ❌ Invalid (`School Year 2020`) | N/A | Participation → Manual Review | Mismatched Term | "Wrong format entirely" |
+| 11 | Invalid - Empty/null | ✅ Found | ❌ Invalid (empty) | N/A | Participation → Manual Review | Mismatched Term | "Empty string" |
+| 12 | Invalid - Gibberish | ✅ Found | ❌ Invalid (`TBD`) | N/A | Participation → Manual Review | Mismatched Term | "No valid pattern" |
+| 13 | No Integration Key | ❌ Not found | Any | Any | **Skipped** - no record created | N/A (stays Pending Sync in btsppackage) | N/A |
+| 14 | IK - Wrong Type | ❌ Type ≠ BTSP | Any | Any | **Skipped** | N/A | N/A |
+| 15 | IK - Wrong Status | ❌ Status ≠ Complete | Any | Any | **Skipped** | N/A | N/A |
+| 16 | IK - No Contact | ❌ Contact is null | Any | Any | **Skipped** | N/A | N/A |
+| 17 | IK - Contact has no Account | ❌ Account is null | Any | Any | **Skipped** | N/A | N/A |
 
 ---
 
@@ -106,13 +147,21 @@ When an affiliate's term text fails validation:
 | Class | Tests | Coverage |
 |---|---|---|
 | TermValidator | 13 | 98% |
-| ParticipationSyncHandler | 8 | 97% |
+| ParticipationSyncHandler | 9 | 97% |
 
-Test scenarios include: valid School Year, valid Summer, invalid term (Manual Review), existing Participation update, missing Integration Key (skip), bulk processing, empty/null inputs.
+Test scenarios include: valid School Year, valid Summer, invalid term (Manual Review), valid term with missing Affiliate Term (Manual Review), existing Participation update, missing Integration Key (skip), bulk processing, empty/null inputs.
 
 ---
 
 ## FLS Summary
+
+### btsppackage
+
+| Field(s) | Targets |
+|---|---|
+| 12 rollup fields on `btsp1__BTSP_Participation__c` | BTSP Participation perm set + System Administrator |
+
+### btspdev
 
 | Field(s) | Targets |
 |---|---|

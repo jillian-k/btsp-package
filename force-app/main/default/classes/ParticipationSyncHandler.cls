@@ -7,8 +7,9 @@
  * Flow passes a list of platform event records. This handler:
  *   1. Validates terms via TermValidator
  *   2. Looks up Integration Keys to find the National Contact
- *   3. Finds or creates Affiliate Term records (Manual Review for invalid terms)
- *   4. Creates or updates Participation records with rollup values
+ *   3. Finds existing Affiliate Term records (user-created)
+ *   4. Falls back to Manual Review holding term if no match found (auto-creates if needed)
+ *   5. Creates or updates Participation records with rollup values
  */
 public with sharing class ParticipationSyncHandler {
 
@@ -118,7 +119,10 @@ public with sharing class ParticipationSyncHandler {
             return;
         }
 
-        // Step 4: Find existing Affiliate Terms by Account + Term
+        // Step 4: Find existing Affiliate Terms by Account + Term (user-created terms)
+        // Also include "Manual Review" in the query for the holding term lookup
+        normalizedTerms.add('Manual Review');
+        
         Map<String, Affiliate_Term__c> existingTerms = new Map<String, Affiliate_Term__c>();
         for (Affiliate_Term__c at : [
             SELECT Id, Affiliate_Account__c, Term__c, Term_Type__c, Year__c
@@ -130,41 +134,76 @@ public with sharing class ParticipationSyncHandler {
             existingTerms.put(termKey, at);
         }
 
-        // Create missing Affiliate Terms
-        List<Affiliate_Term__c> newTerms = new List<Affiliate_Term__c>();
-        Map<String, Affiliate_Term__c> newTermsByKey = new Map<String, Affiliate_Term__c>();
+        // Step 4b: Create Manual Review holding terms for accounts that don't have one
+        // This is the ONLY type of Affiliate Term this handler creates
+        List<Affiliate_Term__c> newManualReviewTerms = new List<Affiliate_Term__c>();
+        Map<Id, Affiliate_Term__c> newManualReviewByAccount = new Map<Id, Affiliate_Term__c>();
 
         for (EventContext ctx : contexts) {
-            String termKey = ctx.accountId + '|' + ctx.termResult.normalizedTerm;
-            if (!existingTerms.containsKey(termKey) && !newTermsByKey.containsKey(termKey)) {
-                Affiliate_Term__c newTerm = new Affiliate_Term__c(
+            String manualReviewKey = ctx.accountId + '|' + 'Manual Review';
+            // Check if Manual Review term exists or is already queued for creation
+            if (!existingTerms.containsKey(manualReviewKey) && !newManualReviewByAccount.containsKey(ctx.accountId)) {
+                Affiliate_Term__c manualReviewTerm = new Affiliate_Term__c(
                     Affiliate_Account__c = ctx.accountId,
-                    Term__c = ctx.termResult.normalizedTerm,
-                    Term_Type__c = ctx.termResult.termType,
-                    Year__c = ctx.termResult.year
+                    Term__c = 'Manual Review',
+                    Term_Type__c = 'Manual Review',
+                    Year__c = '0000'
                 );
-                newTerms.add(newTerm);
-                newTermsByKey.put(termKey, newTerm);
+                newManualReviewTerms.add(manualReviewTerm);
+                newManualReviewByAccount.put(ctx.accountId, manualReviewTerm);
             }
         }
 
-        if (!newTerms.isEmpty()) {
-            insert newTerms;
-            // Merge into existingTerms map
-            for (String key : newTermsByKey.keySet()) {
-                existingTerms.put(key, newTermsByKey.get(key));
+        if (!newManualReviewTerms.isEmpty()) {
+            insert newManualReviewTerms;
+            // Add newly created Manual Review terms to the map
+            for (Affiliate_Term__c mrTerm : newManualReviewTerms) {
+                String termKey = mrTerm.Affiliate_Account__c + '|' + mrTerm.Term__c;
+                existingTerms.put(termKey, mrTerm);
             }
         }
 
-        // Step 5: Find existing Participations by Contact + Affiliate Term
+        // Step 5: Resolve which Affiliate Term to use for each event
+        // If the term is valid AND a matching Affiliate Term exists, use it.
+        // Otherwise, fall back to Manual Review.
+        for (EventContext ctx : contexts) {
+            // If term validation failed, go straight to Manual Review
+            if (!ctx.termResult.isValid) {
+                String manualReviewKey = ctx.accountId + '|' + 'Manual Review';
+                Affiliate_Term__c manualReviewTerm = existingTerms.get(manualReviewKey);
+                ctx.resolvedTermId = manualReviewTerm.Id;
+                ctx.useManualReview = true;
+                // Invalid reason already set by TermValidator
+                continue;
+            }
+            
+            // Term format is valid - look for matching Affiliate Term
+            String termKey = ctx.accountId + '|' + ctx.termResult.normalizedTerm;
+            Affiliate_Term__c matchedTerm = existingTerms.get(termKey);
+            
+            if (matchedTerm != null) {
+                // Found a matching Affiliate Term
+                ctx.resolvedTermId = matchedTerm.Id;
+                ctx.useManualReview = false;
+            } else {
+                // No matching term found - fall back to Manual Review
+                String manualReviewKey = ctx.accountId + '|' + 'Manual Review';
+                Affiliate_Term__c manualReviewTerm = existingTerms.get(manualReviewKey);
+                ctx.resolvedTermId = manualReviewTerm.Id;
+                ctx.useManualReview = true;
+                
+                // Term format was valid but no matching Affiliate Term exists
+                ctx.missingTermReason = 'No matching Affiliate Term found for: ' + ctx.termResult.normalizedTerm;
+            }
+        }
+
+        // Step 6: Find existing Participations by Contact + Affiliate Term
         Set<Id> contactIdsForQuery = new Set<Id>();
         Set<Id> termIdsForQuery = new Set<Id>();
         for (EventContext ctx : contexts) {
             contactIdsForQuery.add(ctx.contactId);
-            String termKey = ctx.accountId + '|' + ctx.termResult.normalizedTerm;
-            Affiliate_Term__c at = existingTerms.get(termKey);
-            if (at != null) {
-                termIdsForQuery.add(at.Id);
+            if (ctx.resolvedTermId != null) {
+                termIdsForQuery.add(ctx.resolvedTermId);
             }
         }
 
@@ -179,26 +218,24 @@ public with sharing class ParticipationSyncHandler {
             existingParticipations.put(pKey, p);
         }
 
-        // Step 6: Build Participation records to upsert
+        // Step 7: Build Participation records to upsert
         List<Participation__c> toUpsert = new List<Participation__c>();
 
         for (EventContext ctx : contexts) {
-            String termKey = ctx.accountId + '|' + ctx.termResult.normalizedTerm;
-            Affiliate_Term__c at = existingTerms.get(termKey);
-            if (at == null) {
+            if (ctx.resolvedTermId == null) {
                 System.debug(LoggingLevel.ERROR,
                     'Could not resolve Affiliate Term for account ' + ctx.accountId +
                     ' and term ' + ctx.termResult.normalizedTerm);
                 continue;
             }
 
-            String pKey = ctx.contactId + '|' + at.Id;
+            String pKey = ctx.contactId + '|' + ctx.resolvedTermId;
             Participation__c p = existingParticipations.get(pKey);
 
             if (p == null) {
                 p = new Participation__c(
                     Participant__c = ctx.contactId,
-                    Affiliate_Term__c = at.Id,
+                    Affiliate_Term__c = ctx.resolvedTermId,
                     Affiliate_Site__c = ctx.accountId,
                     Type__c = 'Student'
                 );
@@ -218,11 +255,15 @@ public with sharing class ParticipationSyncHandler {
             p.Non_Core_Programming_Days_Offered__c = ctx.evt.Non_Core_Programming_Days_Offered__c;
             p.Non_Core_Programming_Days_Attended__c = ctx.evt.Non_Core_Programming_Days_Attended__c;
 
-            // Set Invalid Reason (only for Manual Review terms)
-            p.Invalid_Reason__c = ctx.termResult.invalidReason;
+            // Set Invalid Reason - either from term validation or from missing Affiliate Term
+            if (ctx.missingTermReason != null) {
+                p.Invalid_Reason__c = ctx.missingTermReason;
+            } else {
+                p.Invalid_Reason__c = ctx.termResult.invalidReason;
+            }
 
-            // Set writeback status based on term validity
-            p.Writeback_Status__c = ctx.termResult.isValid ? 'Pending Writeback' : 'Mismatched Term';
+            // Set writeback status - Mismatched Term if using Manual Review, otherwise Pending Writeback
+            p.Writeback_Status__c = ctx.useManualReview ? 'Mismatched Term' : 'Pending Writeback';
 
             // Store the raw term text from the affiliate for reference
             p.BTSP_Provided_Term__c = ctx.evt.Term__c;
@@ -249,5 +290,8 @@ public with sharing class ParticipationSyncHandler {
         public Integration_Key__c integrationKey;
         public Id contactId;
         public Id accountId;
+        public Id resolvedTermId;
+        public Boolean useManualReview = false;
+        public String missingTermReason;
     }
 }

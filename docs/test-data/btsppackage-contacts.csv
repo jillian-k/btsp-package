@@ -1,0 +1,21 @@
+FirstName,LastName,AccountId
+ParticSync Test 01,Happy Path SY,001Ki00000DnioEIAR
+ParticSync Test 02,Happy Path Summer,001Ki00000DnioEIAR
+ParticSync Test 03,Spaces Normalized,001Ki00000DnioEIAR
+ParticSync Test 04,Missing Affiliate Term,001Ki00000DnioEIAR
+ParticSync Test 05,Invalid Hyphen,001Ki00000DnioEIAR
+ParticSync Test 06,Invalid Space After,001Ki00000DnioEIAR
+ParticSync Test 07,Invalid Space Before,001Ki00000DnioEIAR
+ParticSync Test 08,Invalid Year Only,001Ki00000DnioEIAR
+ParticSync Test 09,Invalid Wrong Order,001Ki00000DnioEIAR
+ParticSync Test 10,Invalid Wordy,001Ki00000DnioEIAR
+ParticSync Test 11,Invalid Empty,001Ki00000DnioEIAR
+ParticSync Test 12,Invalid Gibberish,001Ki00000DnioEIAR
+ParticSync Test 13,No Integration Key,001Ki00000DnioEIAR
+ParticSync Test 14,IK Wrong Type,001Ki00000DnioEIAR
+ParticSync Test 15,IK Wrong Status,001Ki00000DnioEIAR
+ParticSync Test 16,IK No Contact,001Ki00000DnioEIAR
+ParticSync Test 17,IK Contact No Account,001Ki00000DnioEIAR
+ParticSync Test 18,Bulk Test 1,001Ki00000DnioEIAR
+ParticSync Test 19,Bulk Test 2,001Ki00000DnioEIAR
+ParticSync Test 20,Bulk Test 3,001Ki00000DnioEIAR

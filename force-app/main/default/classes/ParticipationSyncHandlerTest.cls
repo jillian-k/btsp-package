@@ -142,6 +142,54 @@ private class ParticipationSyncHandlerTest {
     }
 
     /**
+     * Test: Valid term format but no matching Affiliate Term exists -> uses Manual Review
+     */
+    @IsTest
+    static void testValidTermNoAffiliateTerm_ManualReview() {
+        Account acct = TestDataFactory.createAccount('Test Affiliate');
+        Contact con = TestDataFactory.createContact('Test', 'Student', acct.Id);
+        TestDataFactory.createIntegrationKey(
+            con.Id, SOURCE_CONTACT_ID, SOURCE_ORG_ID, 'BTSP', 'Complete'
+        );
+
+        // Note: NOT creating an Affiliate Term for '2024/2025 SY'
+        // The handler should fall back to Manual Review
+
+        Affiliate_Participation_Sync__e evt = TestDataFactory.buildSyncEvent(
+            SOURCE_CONTACT_ID, SOURCE_ORG_ID, '2024/2025 SY', BTSP_PARTICIPATION_ID
+        );
+
+        Test.startTest();
+        ParticipationSyncHandler.handleEvents(new List<Affiliate_Participation_Sync__e>{ evt });
+        Test.stopTest();
+
+        // Verify the Manual Review Affiliate Term was created (not '2024/2025 SY')
+        List<Affiliate_Term__c> terms = [
+            SELECT Term__c, Term_Type__c, Year__c
+            FROM Affiliate_Term__c
+            WHERE Affiliate_Account__c = :acct.Id
+        ];
+        System.assertEquals(1, terms.size(), 'Should only create Manual Review term');
+        System.assertEquals('Manual Review', terms[0].Term__c, 'Should NOT create the actual term');
+        System.assertEquals('Manual Review', terms[0].Term_Type__c);
+        System.assertEquals('0000', terms[0].Year__c);
+
+        // Verify Participation has correct invalid reason and status
+        List<Participation__c> parts = [
+            SELECT Invalid_Reason__c, Writeback_Status__c, BTSP_Provided_Term__c
+            FROM Participation__c
+            WHERE Participant__c = :con.Id
+        ];
+        System.assertEquals(1, parts.size(), 'Should create Participation');
+        System.assertEquals('No matching Affiliate Term found for: 2024/2025 SY', parts[0].Invalid_Reason__c,
+            'Invalid reason should indicate missing Affiliate Term');
+        System.assertEquals('Mismatched Term', parts[0].Writeback_Status__c,
+            'Missing Affiliate Term should result in Mismatched Term status');
+        System.assertEquals('2024/2025 SY', parts[0].BTSP_Provided_Term__c,
+            'Should store the raw term text from affiliate');
+    }
+
+    /**
      * Test: Existing Participation -> rollup values updated (not duplicated)
      */
     @IsTest

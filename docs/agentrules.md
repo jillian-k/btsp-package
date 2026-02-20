@@ -1,6 +1,6 @@
 ## Agent Rules
 
-1. Only use the charitynavdev org for this project - do not use any other instances
+1. Only use the btsppackage or btspdev org for this project - I will instruct which org to use, if you are unsure verify before making any changes. Do not use any other instances
 2. always use the sf cli to interact with the org
    2.a always deploy and check changes against our target org
 3. Always look in the code base before writing new functionality - we do not want duplicative code
