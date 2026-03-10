@@ -1,0 +1,21 @@
+Test,Contact_ID,Contact_Name,Expected_Type,Expected_Source_OrgId,Test_Scenario
+01,003Ki00000BIr1kIAD,ParticSync Test 01 Happy Path SY,Create,00D1U000000pJ8b,Happy Path - School Year term
+02,003Ki00000BIr1lIAD,ParticSync Test 02 Happy Path Summer,Create,00D1U000000pJ8b,Happy Path - Summer term
+03,003Ki00000BIr1mIAD,ParticSync Test 03 Spaces Normalized,Create,00D1U000000pJ8b,Term with spaces normalized
+04,003Ki00000BIr1nIAD,ParticSync Test 04 Missing Affiliate Term,Create,00D1U000000pJ8b,Missing Affiliate Term in National
+05,003Ki00000BIr1oIAD,ParticSync Test 05 Invalid Hyphen,Create,00D1U000000pJ8b,Invalid term - uses hyphen
+06,003Ki00000BIr1pIAD,ParticSync Test 06 Invalid Space After,Create,00D1U000000pJ8b,Invalid term - space after slash
+07,003Ki00000BIr1qIAD,ParticSync Test 07 Invalid Space Before,Create,00D1U000000pJ8b,Invalid term - space before slash
+08,003Ki00000BIr1rIAD,ParticSync Test 08 Invalid Year Only,Create,00D1U000000pJ8b,Invalid term - year only
+09,003Ki00000BIr1sIAD,ParticSync Test 09 Invalid Wrong Order,Create,00D1U000000pJ8b,Invalid term - wrong order
+10,003Ki00000BIr1tIAD,ParticSync Test 10 Invalid Wordy,Create,00D1U000000pJ8b,Invalid term - wordy format
+11,003Ki00000BIr1uIAD,ParticSync Test 11 Invalid Empty,Create,00D1U000000pJ8b,Invalid term - empty string
+12,003Ki00000BIr1vIAD,ParticSync Test 12 Invalid Gibberish,Create,00D1U000000pJ8b,Invalid term - gibberish
+13,003Ki00000BIr1wIAD,ParticSync Test 13 No Integration Key,Create,00D1U000000pJ8b,No Integration Key in National
+14,003Ki00000BIr1xIAD,ParticSync Test 14 IK Wrong Type,Create,00D1U000000pJ8b,Integration Key wrong type
+15,003Ki00000BIr1yIAD,ParticSync Test 15 IK Wrong Status,Create,00D1U000000pJ8b,Integration Key wrong status
+16,003Ki00000BIr1zIAD,ParticSync Test 16 IK No Contact,Create,00D1U000000pJ8b,Integration Key has no Contact
+17,003Ki00000BIr20IAD,ParticSync Test 17 IK Contact No Account,Create,00D1U000000pJ8b,Contact has no Account
+18,003Ki00000BIr21IAD,ParticSync Test 18 Bulk Test 1,Create,00D1U000000pJ8b,Bulk processing test 1
+19,003Ki00000BIr22IAD,ParticSync Test 19 Bulk Test 2,Create,00D1U000000pJ8b,Bulk processing test 2
+20,003Ki00000BIr23IAD,ParticSync Test 20 Bulk Test 3,Create,00D1U000000pJ8b,Bulk processing test 3
